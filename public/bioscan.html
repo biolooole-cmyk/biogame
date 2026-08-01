@@ -413,6 +413,26 @@
 </div>
 
 <script>
+/* ── localStorage polyfill for window.storage (replaces Claude Artifact storage API) ── */
+window.storage = {
+  _key(k, shared){ return (shared ? 'shared:' : 'private:') + k; },
+  async get(k, shared){
+    const v = localStorage.getItem(this._key(k, shared));
+    return v == null ? null : { value: v };
+  },
+  async set(k, v, shared){ localStorage.setItem(this._key(k, shared), v); },
+  async delete(k, shared){ localStorage.removeItem(this._key(k, shared)); },
+  async list(prefix, shared){
+    const p = (shared ? 'shared:' : 'private:') + prefix;
+    const keys = [];
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith(p)) keys.push({ key: k.slice(shared ? 7 : 8) });
+    }
+    return keys;
+  }
+};
+
 function sourceTagHTML(source, kind){
   const isAi = source==='ai';
   const label = kind==='task' ? (isAi?'✨ Згенеровано ШІ':'📦 Резервне завдання (ШІ недоступний)') : (isAi?'✨ Оцінено ШІ':'📦 Оцінено резервним алгоритмом (ШІ недоступний)');
@@ -1246,7 +1266,7 @@ async function callClaude(system, userText){
     let lastErr = null;
     for(let attempt=1; attempt<=maxAttempts; attempt++){
       try{
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        const resp = await fetch('/api/claude', {
           method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:2500, system:system, messages:[{role:'user', content:userText}]})
         });
@@ -2663,7 +2683,7 @@ $('btn-test-ai').onclick = async ()=>{
   box.innerHTML = `<div class="diag-box">🧠 Перевіряю з'єднання...</div>`;
   const started = Date.now();
   try{
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('/api/claude', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:20, messages:[{role:'user', content:'Скажи одне слово: працює'}]})
     });
