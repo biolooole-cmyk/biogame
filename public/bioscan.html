@@ -273,6 +273,51 @@
 
   .badge-ring{width:150px; height:150px; border-radius:50%; margin:8px auto 6px; background:radial-gradient(circle at 35% 30%, #FFF3D6, var(--amber) 55%, #B87A20 100%); box-shadow:0 0 40px rgba(255,182,72,0.5); display:flex; align-items:center; justify-content:center; font-size:56px;}
   footer{margin-top:auto; text-align:center; padding-top:22px; color:var(--muted); font-size:0.7rem; font-family:var(--mono);}
+
+  /* ── CLASSIFY ENGINE ── */
+  .classify-pool{display:flex; flex-wrap:wrap; gap:8px; padding:12px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:12px; min-height:52px;}
+  .classify-chip{font-family:var(--display); font-size:0.88rem; padding:8px 12px; border-radius:10px; background:var(--bg-panel); border:1.5px solid var(--line); cursor:pointer; display:flex; align-items:center; gap:6px; transition:border-color .15s, background .15s; user-select:none;}
+  .classify-chip.selected{border-color:var(--amber); background:rgba(255,182,72,0.15);}
+  .classify-chip.placed{opacity:0.4; cursor:default; pointer-events:none;}
+  .classify-bins{display:grid; gap:10px; margin-top:12px;}
+  .classify-bin{background:var(--bg-panel-2); border:2px dashed var(--line); border-radius:14px; padding:12px; min-height:80px; transition:border-color .15s;}
+  .classify-bin.active{border-color:var(--mint); border-style:solid;}
+  .classify-bin-head{font-family:var(--display); font-size:0.9rem; color:var(--amber); margin-bottom:8px; display:flex; align-items:center; gap:6px;}
+  .classify-bin-items{display:flex; flex-wrap:wrap; gap:6px; min-height:32px;}
+  .classify-bin-item{font-family:var(--display); font-size:0.82rem; padding:6px 10px; border-radius:8px; background:var(--bg-panel); border:1px solid var(--mint-dim); display:flex; align-items:center; gap:5px;}
+  .classify-bin-item.wrong{border-color:var(--coral); animation:matchShake .4s ease;}
+  @keyframes classifySnap{0%{transform:scale(0.88);opacity:0;} 100%{transform:scale(1);opacity:1;}}
+  .classify-bin-item{animation:classifySnap .25s ease;}
+
+  /* ── NETWORK ENGINE ── */
+  .network-pool{display:flex; flex-wrap:wrap; gap:8px; padding:12px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:12px;}
+  .network-node{font-family:var(--display); font-size:0.85rem; padding:9px 14px; border-radius:10px; background:var(--bg-panel); border:1.5px solid var(--line); cursor:pointer; display:flex; align-items:center; gap:6px; transition:border-color .15s, transform .1s; user-select:none;}
+  .network-node:active{transform:scale(0.96);}
+  .network-node.used{opacity:0.35; cursor:default; pointer-events:none;}
+  .network-node.wrong-node{border-color:var(--coral); animation:matchShake .4s ease;}
+  .network-chain{display:flex; flex-direction:column; gap:0; margin-top:14px;}
+  .network-chain-item{display:flex; align-items:center; gap:8px; animation:classifySnap .2s ease;}
+  .network-chain-item .nc-node{background:var(--bg-panel-2); border:1.5px solid var(--mint-dim); border-radius:10px; padding:9px 14px; font-family:var(--display); font-size:0.85rem; display:flex; align-items:center; gap:6px;}
+  .network-chain-item .nc-arrow{font-size:1.2rem; color:var(--mint); flex-shrink:0; padding:0 4px;}
+  .network-err{font-family:var(--mono); font-size:0.75rem; color:var(--coral); margin-top:8px; padding:6px 10px; background:rgba(255,111,97,0.1); border-radius:8px; border:1px solid rgba(255,111,97,0.3);}
+
+  /* ── DIARY SCREEN ── */
+  .diary-entry{background:var(--bg-panel); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:10px;}
+  .diary-entry-head{display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;}
+  .diary-entry-date{font-family:var(--mono); font-size:0.65rem; color:var(--muted);}
+  .diary-entry-cat{font-family:var(--mono); font-size:0.68rem; padding:2px 8px; border-radius:100px; background:rgba(111,239,192,0.1); color:var(--mint); border:1px solid rgba(111,239,192,0.25);}
+  .diary-entry-score{font-family:var(--mono); font-size:0.68rem; font-weight:700; color:var(--amber);}
+  .diary-entry-text{font-size:0.9rem; line-height:1.55; color:var(--text);}
+  .diary-input-wrap{margin-top:16px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:14px; padding:14px;}
+  .diary-input-label{font-family:var(--mono); font-size:0.72rem; color:var(--mint); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;}
+  .diary-textarea{width:100%; background:transparent; border:none; outline:none; color:var(--text); font-family:var(--body); font-size:0.92rem; line-height:1.55; resize:none; min-height:70px;}
+  .diary-textarea::placeholder{color:var(--muted);}
+
+  /* ── ADAPTIVE PROFILE ── */
+  .adapt-bar-wrap{margin-bottom:10px;}
+  .adapt-bar-label{display:flex; justify-content:space-between; font-family:var(--mono); font-size:0.7rem; color:var(--muted); margin-bottom:4px;}
+  .adapt-bar-track{height:8px; border-radius:6px; background:var(--bg-deep); overflow:hidden;}
+  .adapt-bar-fill{height:100%; border-radius:6px; transition:width .4s ease;}
 </style>
 </head>
 <body>
@@ -322,6 +367,7 @@
     <div id="daily-challenge-area"></div>
     <div class="cta-row">
       <button class="btn secondary small" id="btn-encyclopedia">📚 Енциклопедія відкриттів</button>
+      <button class="btn secondary small" id="btn-diary">📓 Щоденник науковця</button>
       <button class="btn secondary small" id="btn-teacher-mode">👩‍🏫 Режим вчителя</button>
       <button class="btn secondary small" id="btn-test-ai">🔧 Перевірити з'єднання з ШІ</button>
       <button class="btn secondary small" id="btn-reset" style="display:none;">Скинути прогрес</button>
@@ -408,6 +454,17 @@
       <div class="result-msg">Ти пройшов шлях від молекули до біосфери — справжній біолог-дослідник!</div>
       <div class="cta-row" style="width:100%; margin-top:20px;"><button class="btn" id="btn-play-again">Нове дослідження</button></div>
     </div>
+  </section>
+
+  <!-- DIARY -->
+  <section class="screen" id="screen-diary">
+    <div class="topbar">
+      <button class="btn secondary small" id="btn-diary-back" style="padding:9px 12px;">← Меню</button>
+    </div>
+    <div class="eyebrow" style="margin-bottom:6px;">ЩОДЕННИК НАУКОВЦЯ</div>
+    <p style="font-size:0.82rem; color:var(--muted); font-family:var(--mono); margin:0 0 14px;">Твої особисті нотатки після кожного дослідження</p>
+    <div id="diary-entries-list"></div>
+    <div id="diary-empty" style="display:none; text-align:center; padding:40px 0; color:var(--muted); font-family:var(--mono); font-size:0.8rem;">Щоденник поки порожній.<br>Після кожної місії можна залишити нотатку.</div>
   </section>
 
 </div>
@@ -717,11 +774,11 @@ function pickTemplates(levelIdx, catKey){
 /* Кожна категорія може мати кілька типів місій — обирається випадково щоразу,
    щоб чергувати "діагностику" з "побудовою/ремонтом" (drag-and-drop-стиль). */
 const ENGINE_POOLS = {
-  molecular:['slider','toggle'],
-  cellular:['diagnosis','match','slider'],
-  organism:['toggle','diagnosis'],
-  ecosystem:['population','match','toggle'],
-  biosphere:['toggle','population']
+  molecular:['slider','toggle','classify'],
+  cellular:['diagnosis','match','slider','network'],
+  organism:['toggle','diagnosis','classify'],
+  ecosystem:['population','match','toggle','network'],
+  biosphere:['toggle','population','classify']
 };
 // Резервний банк написаний вручну лише для одного "первинного" рушія на
 // категорію (+ окремий match-варіант) — якщо ШІ обрав інший рушій з пулу,
@@ -1312,7 +1369,9 @@ const ENGINE_SCHEMAS = {
   diagnosis: `{"scenario":"опис ситуації 1-2 речення","parts":[{"key":"id1","label":"назва частини системи (клітини/органа/організму — залежно від масштабу)","icon":"один емодзі","desc":"опис стану","correct":true},{"key":"id2","label":"...","icon":"емодзі","desc":"опис стану, correct не вказувати або false"},{"...ще 3-4 частини..."}],"evidence":"речення про правильну знахідку","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
   toggle: `{"scenario":"опис ситуації 1-2 речення","visualTheme":"одне з: pulse, gauge — обери за суттю сценарію (див. окрему інструкцію нижче)","factors":[{"key":"id1","label":"назва фактора","weight":number 0-100,"correct":true},{"key":"id2","label":"...","weight":number},{"...ще 2-3 фактори..."}],"evidence":"речення про знахідку","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
   population: `{"scenario":"опис ситуації 1-2 речення","visualTheme":"одне з: dish, habitat — обери за суттю сценарію (див. окрему інструкцію нижче)","label":"назва часового параметра (напр. Років після події)","min":0,"max":number,"step":1,"formula":"decay або growth","start":number,"rate":number(0.05-0.35),"targetMin":number,"targetMax":number,"barLabel":"назва вимірюваного показника (%)","evidence":"речення про знахідку","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
-  match: `{"scenario":"опис ситуації 1-2 речення (побудова/ремонт клітини, системи органів АБО харчової мережі — залежно від масштабу)","pairs":[{"itemLabel":"назва об'єкта (органела/орган/організм)","itemIcon":"один емодзі","slotLabel":"назва функції/ролі, куди його треба розмістити"},{"...ще 3-5 пар..."}],"evidence":"речення про завершену побудову","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`
+  match: `{"scenario":"опис ситуації 1-2 речення (побудова/ремонт клітини, системи органів АБО харчової мережі — залежно від масштабу)","pairs":[{"itemLabel":"назва об'єкта (органела/орган/організм)","itemIcon":"один емодзі","slotLabel":"назва функції/ролі, куди його треба розмістити"},{"...ще 3-5 пар..."}],"evidence":"речення про завершену побудову","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
+  classify: `{"scenario":"опис ситуації 1-2 речення","bins":[{"key":"bin1","label":"назва категорії 1","emoji":"один емодзі"},{"key":"bin2","label":"назва категорії 2","emoji":"один емодзі"}],"items":[{"label":"назва об'єкта","icon":"один емодзі","bin":"bin1"},{"label":"...","icon":"емодзі","bin":"bin2"},{"...ще 4-6 об'єктів сумарно..."}],"evidence":"речення про правильний розподіл","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
+  network: `{"scenario":"опис ситуації 1-2 речення","nodes":[{"id":"a","label":"подія/процес 1","icon":"один емодзі"},{"id":"b","label":"подія/процес 2","icon":"один емодзі"},{"id":"c","label":"подія/процес 3","icon":"один емодзі"},{"id":"d","label":"подія/процес 4","icon":"один емодзі"}],"correctChain":["a","b","c","d"],"evidence":"речення про виявлений причинно-наслідковий ланцюжок","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`
 };
 
 let lastSetting = null, lastRole = null, lastOpening = null, lastEnding = null;
@@ -1550,6 +1609,22 @@ function validateTask(engine, p){
     if(badPair) return 'match: a pair is missing itemLabel/itemIcon/slotLabel';
     return null;
   }
+  if(engine==='classify'){
+    if(!Array.isArray(p.bins) || p.bins.length<2) return 'classify: need at least 2 bins';
+    if(!Array.isArray(p.items) || p.items.length<4) return 'classify: need at least 4 items';
+    const validBinKeys = p.bins.map(b=>b.key);
+    const badItem = p.items.find(it=>!it.label || !it.icon || !validBinKeys.includes(it.bin));
+    if(badItem) return 'classify: item missing label/icon or has invalid bin key';
+    return null;
+  }
+  if(engine==='network'){
+    if(!Array.isArray(p.nodes) || p.nodes.length<3) return 'network: need at least 3 nodes';
+    if(!Array.isArray(p.correctChain) || p.correctChain.length<3) return 'network: correctChain too short';
+    const nodeIds = p.nodes.map(n=>n.id);
+    const badId = p.correctChain.find(id=>!nodeIds.includes(id));
+    if(badId) return 'network: correctChain references unknown node id: '+badId;
+    return null;
+  }
   return 'unknown engine: '+engine;
 }
 
@@ -1659,6 +1734,40 @@ async function loadSavedName(){
 }
 async function saveName(name){
   try{ await window.storage.set('my-name', name, false); }catch(e){ console.warn('saveName failed', e); }
+}
+function saveProfile(){
+  try{
+    const snap = {
+      byCategory: state.profile.byCategory,
+      byTopic: state.profile.byTopic,
+      byMissionType: state.profile.byMissionType,
+      thinkingTypes: state.profile.thinkingTypes,
+      errorTypes: state.profile.errorTypes,
+      completedMissions: state.completedMissions,
+      bestResult: state.bestResult,
+      unlockedLevel: state.unlockedLevel,
+      achievements: Array.from(state.achievements),
+      history: state.history.slice(-30)
+    };
+    localStorage.setItem('bio-profile', JSON.stringify(snap));
+  }catch(e){ console.warn('saveProfile failed', e); }
+}
+function loadProfile(){
+  try{
+    const raw = localStorage.getItem('bio-profile');
+    if(!raw) return;
+    const snap = JSON.parse(raw);
+    if(snap.byCategory) state.profile.byCategory = snap.byCategory;
+    if(snap.byTopic) state.profile.byTopic = snap.byTopic;
+    if(snap.byMissionType) state.profile.byMissionType = snap.byMissionType;
+    if(snap.thinkingTypes) state.profile.thinkingTypes = snap.thinkingTypes;
+    if(snap.errorTypes) state.profile.errorTypes = snap.errorTypes;
+    if(typeof snap.completedMissions==='number') state.completedMissions = snap.completedMissions;
+    if(typeof snap.bestResult==='number') state.bestResult = snap.bestResult;
+    if(typeof snap.unlockedLevel==='number') state.unlockedLevel = snap.unlockedLevel;
+    if(Array.isArray(snap.achievements)) state.achievements = new Set(snap.achievements);
+    if(Array.isArray(snap.history)) state.history = snap.history;
+  }catch(e){ console.warn('loadProfile failed', e); }
 }
 async function loadSavedClassCode(){
   try{
@@ -1954,6 +2063,26 @@ function renderProfile(){
     cats.appendChild(row);
   });
   wrap.appendChild(cats);
+
+  // Adaptive strength/weakness block
+  const hasEnough = CATEGORIES.some(c=>state.profile.byCategory[c.key].attempts>=2);
+  if(hasEnough){
+    const adaptDiv = document.createElement('div');
+    adaptDiv.style.cssText='margin-top:14px;';
+    adaptDiv.innerHTML='<div class="ach-head" style="margin-bottom:8px;">Адаптивний прогрес <span style="color:var(--muted);font-size:0.65rem;">AI підлаштовує складність</span></div>';
+    CATEGORIES.forEach(cat=>{
+      const pc = state.profile.byCategory[cat.key];
+      if(pc.attempts===0) return;
+      const avg = Math.round(pc.totalScore/pc.attempts);
+      const color = avg>=80?'var(--mint)': avg>=60?'var(--amber)':'var(--coral)';
+      const label = avg>=80?'✓ Сильна зона':'': avg>=60?'':'⚠ Потребує уваги';
+      adaptDiv.innerHTML += `<div class="adapt-bar-wrap">
+        <div class="adapt-bar-label"><span>${cat.icon} ${cat.label.split(' ')[0]}</span><span style="color:${color}">${avg}% ${avg<60?'⚠':avg>=80?'✓':''}</span></div>
+        <div class="adapt-bar-track"><div class="adapt-bar-fill" style="width:${avg}%;background:${color};"></div></div>
+      </div>`;
+    });
+    wrap.appendChild(adaptDiv);
+  }
 }
 
 /* ---------- level screen ---------- */
@@ -2325,6 +2454,7 @@ function renderTask(l, cat, engine, task, source, missionType, missionSlot){
     state.history.push({level:l, catLabel:cat.label, icon:cat.icon, pct:finalPct, hints:hintsUsed, ts:Date.now(), durationSec:Math.round((Date.now()-taskStartTime)/1000), dailyChallenge: state.pendingDailyChallenge||null});
     state.pendingDailyChallenge = null;
     syncStudentRecord();
+    saveProfile();
 
     const pc = state.profile.byCategory[cat.key];
     pc.attempts++; pc.totalScore += finalPct; pc.hints += hintsUsed;
@@ -2376,6 +2506,32 @@ function renderTask(l, cat, engine, task, source, missionType, missionSlot){
       const t=document.createElement('div'); t.className='ach-toast'; t.textContent = `📚 Нова стаття в енциклопедії: ${newEncyclopediaEntry.icon} ${newEncyclopediaEntry.title}!`;
       toastArea.appendChild(t);
     }
+    // Diary input block
+    const diaryWrap = document.createElement('div');
+    diaryWrap.className = 'diary-input-wrap';
+    diaryWrap.innerHTML = `
+      <div class="diary-input-label">📓 Щоденник — що тебе здивувало?</div>
+      <textarea class="diary-textarea" id="diary-note-input" rows="2" placeholder="Одне речення про несподіване відкриття або те, що залишилось незрозумілим..."></textarea>
+      <button class="btn secondary small" id="diary-save-btn" style="margin-top:8px; width:100%;">Зберегти нотатку</button>
+      <div id="diary-saved-msg" style="display:none; color:var(--mint); font-family:var(--mono); font-size:0.72rem; margin-top:6px; text-align:center;">✓ Збережено в щоденнику!</div>`;
+    $('ach-toast-area').after(diaryWrap);
+    $('diary-save-btn').onclick = ()=>{
+      const text = $('diary-note-input').value.trim();
+      if(!text) return;
+      const entries = JSON.parse(localStorage.getItem('diary-entries')||'[]');
+      entries.unshift({
+        date: new Date().toLocaleDateString('uk-UA',{day:'2-digit',month:'2-digit',year:'numeric'}),
+        catLabel: cat.label,
+        catIcon: cat.icon,
+        level: l+1,
+        score: pct,
+        text
+      });
+      localStorage.setItem('diary-entries', JSON.stringify(entries.slice(0,100)));
+      $('diary-save-btn').style.display='none';
+      $('diary-saved-msg').style.display='block';
+      $('diary-note-input').disabled=true;
+    };
     showScreen('screen-result');
   }
 
@@ -2478,6 +2634,25 @@ $('btn-task-back').onclick = ()=>{ renderLevelTasks(state.currentLevel); showScr
 
 $('btn-encyclopedia').onclick = ()=>{ renderEncyclopedia(); showScreen('screen-encyclopedia'); };
 $('btn-encyclopedia-back').onclick = ()=>{ renderLevelSelect(); showScreen('screen-start'); };
+$('btn-diary').onclick = ()=>{ renderDiary(); showScreen('screen-diary'); };
+$('btn-diary-back').onclick = ()=>{ showScreen('screen-start'); };
+function renderDiary(){
+  const entries = JSON.parse(localStorage.getItem('diary-entries')||'[]');
+  const list = $('diary-entries-list');
+  const empty = $('diary-empty');
+  if(!entries.length){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  list.innerHTML = entries.map(e=>`
+    <div class="diary-entry">
+      <div class="diary-entry-head">
+        <span class="diary-entry-cat">${e.catIcon||''} ${e.catLabel}</span>
+        <span class="diary-entry-score">${e.score}%</span>
+        <span class="diary-entry-cat" style="background:rgba(255,182,72,0.08);color:var(--amber);border-color:rgba(255,182,72,0.2);">Рівень ${e.level}</span>
+        <span class="diary-entry-date">${e.date}</span>
+      </div>
+      <div class="diary-entry-text">${e.text}</div>
+    </div>`).join('');
+}
 $('btn-teacher-mode').onclick = async ()=>{
   showScreen('screen-teacher');
   renderTeacherGate();
@@ -2706,6 +2881,8 @@ $('btn-test-ai').onclick = async ()=>{
    SIMULATION ENGINES — instrumented with action logging
    ============================================================ */
 function renderSim(engine, d, onFound, reportTriedCount){
+  if(engine==='classify'){ renderClassifySim(d,onFound,reportTriedCount); return; }
+  if(engine==='network'){ renderNetworkSim(d,onFound,reportTriedCount); return; }
   if(engine==='slider') renderSliderSim(d,onFound,reportTriedCount);
   else if(engine==='diagnosis') renderDiagnosisSim(d,onFound,reportTriedCount);
   else if(engine==='toggle') renderToggleSim(d,onFound,reportTriedCount);
@@ -3133,7 +3310,147 @@ function renderMatchSim(d,onFound,reportTriedCount){
   renderItems(); renderSlots();
 }
 
+/* ============================================================
+   CLASSIFY ENGINE — сортування об'єктів по категоріях
+   ============================================================ */
+function renderClassifySim(d, onFound, reportTriedCount){
+  const area = $('sim-area');
+  let selected = null; // chip element currently selected
+  let placements = {}; // itemLabel → binKey
+  let mistakes = 0;
+  const items = [...d.items];
+  const bins = d.bins;
+
+  function render(){
+    const unplaced = items.filter(it=>!placements[it.label]);
+    area.innerHTML = `
+      <div class="sim-box" style="padding:14px;">
+        <div class="sim-row" style="margin-bottom:6px;">
+          <span class="sim-label">Розклади об'єкти по категоріях</span>
+          <span class="sim-value">${Object.keys(placements).length}/${items.length}</span>
+        </div>
+        <div class="classify-pool" id="cl-pool">
+          ${unplaced.map(it=>`<div class="classify-chip" data-label="${it.label}" data-bin="${it.bin}">${it.icon} ${it.label}</div>`).join('')}
+          ${unplaced.length===0 ? '<span style="color:var(--muted);font-family:var(--mono);font-size:0.75rem;">Усі розміщено ✓</span>' : ''}
+        </div>
+        <div class="classify-bins" style="grid-template-columns:repeat(${bins.length<=2?2:1},1fr);">
+          ${bins.map(bin=>`
+            <div class="classify-bin" id="clbin-${bin.key}" data-binkey="${bin.key}">
+              <div class="classify-bin-head">${bin.emoji} ${bin.label}</div>
+              <div class="classify-bin-items" id="clitems-${bin.key}">
+                ${items.filter(it=>placements[it.label]===bin.key).map(it=>`<div class="classify-bin-item">${it.icon} ${it.label}</div>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+        ${mistakes>0 ? `<div class="network-err">Спроб: ${mistakes} — деякі об'єкти поміщено не туди. Подивись уважніше!</div>` : ''}
+      </div>`;
+
+    // chip selection
+    area.querySelectorAll('.classify-chip').forEach(chip=>{
+      chip.onclick = ()=>{
+        area.querySelectorAll('.classify-chip').forEach(c=>c.classList.remove('selected'));
+        if(selected===chip.dataset.label){ selected=null; return; }
+        selected = chip.dataset.label;
+        chip.classList.add('selected');
+        // highlight bins
+        area.querySelectorAll('.classify-bin').forEach(b=>b.classList.toggle('active', !!selected));
+      };
+    });
+
+    // bin click
+    area.querySelectorAll('.classify-bin').forEach(bin=>{
+      bin.onclick = ()=>{
+        if(!selected) return;
+        const item = items.find(it=>it.label===selected);
+        if(!item) return;
+        const chosenKey = bin.dataset.binkey;
+        if(chosenKey===item.bin){
+          placements[item.label] = chosenKey;
+          selected = null;
+          reportTriedCount(Object.keys(placements).length);
+          if(Object.keys(placements).length>=items.length){
+            const log = `Учень класифікував ${items.length} об'єктів: ${items.map(it=>it.label+' → '+bins.find(b=>b.key===it.bin).label).join(', ')}. Помилкових спроб: ${mistakes}.`;
+            render();
+            setTimeout(()=>onFound(log), 350);
+          } else { render(); }
+        } else {
+          mistakes++;
+          reportTriedCount(mistakes);
+          // flash wrong
+          const wrongItem = document.querySelector(`[data-label="${item.label}"]`);
+          if(wrongItem){ wrongItem.classList.add('wrong-flash'); setTimeout(()=>wrongItem&&wrongItem.classList.remove('wrong-flash'), 500); }
+        }
+      };
+    });
+  }
+  render();
+}
+
+/* ============================================================
+   NETWORK ENGINE — побудова причинно-наслідкового ланцюжка
+   ============================================================ */
+function renderNetworkSim(d, onFound, reportTriedCount){
+  const area = $('sim-area');
+  const nodes = [...d.nodes];
+  const chain = d.correctChain; // array of ids in correct order
+  let builtChain = []; // ids tapped so far
+  let mistakes = 0;
+
+  function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
+  const shuffled = shuffle(nodes);
+
+  function render(){
+    const usedIds = new Set(builtChain);
+    const available = shuffled.filter(n=>!usedIds.has(n.id));
+    area.innerHTML = `
+      <div class="sim-box" style="padding:14px;">
+        <div class="sim-row" style="margin-bottom:6px;">
+          <span class="sim-label">Збери причинно-наслідковий ланцюжок</span>
+          <span class="sim-value">${builtChain.length}/${chain.length}</span>
+        </div>
+        ${builtChain.length>0 ? `
+        <div class="network-chain" style="margin-bottom:12px;">
+          ${builtChain.map((id,i)=>{
+            const n=nodes.find(x=>x.id===id);
+            return `<div class="network-chain-item">
+              <div class="nc-node">${n.icon} ${n.label}</div>
+              ${i<builtChain.length-1?'<div class="nc-arrow">↓</div>':''}
+            </div>`;
+          }).join('')}
+        </div>` : '<div style="color:var(--muted);font-family:var(--mono);font-size:0.75rem;margin-bottom:10px;">Натискай на події у правильному причинному порядку ↓</div>'}
+        <div class="network-pool">
+          ${available.map(n=>`<div class="network-node" data-id="${n.id}">${n.icon} ${n.label}</div>`).join('')}
+        </div>
+        ${mistakes>0 ? `<div class="network-err">Невірних спроб: ${mistakes} — подумай, що є першопричиною.</div>` : ''}
+      </div>`;
+
+    area.querySelectorAll('.network-node').forEach(el=>{
+      el.onclick = ()=>{
+        const id = el.dataset.id;
+        const expected = chain[builtChain.length];
+        if(id===expected){
+          builtChain.push(id);
+          reportTriedCount(builtChain.length);
+          if(builtChain.length>=chain.length){
+            const log = `Учень побудував причинно-наслідковий ланцюжок: ${builtChain.map(id=>nodes.find(n=>n.id===id).label).join(' → ')}. Помилкових спроб: ${mistakes}.`;
+            render();
+            setTimeout(()=>onFound(log), 350);
+          } else { render(); }
+        } else {
+          mistakes++;
+          reportTriedCount(mistakes);
+          el.classList.add('wrong-node');
+          setTimeout(()=>el&&el.classList.remove('wrong-node'), 500);
+          render();
+        }
+      };
+    });
+  }
+  render();
+}
+
 (async ()=>{
+  loadProfile();
   state.studentName = await loadSavedName();
   state.classCode = await loadSavedClassCode();
   teacherAuthed = await loadTeacherAuth();
