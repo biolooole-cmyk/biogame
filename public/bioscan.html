@@ -318,6 +318,29 @@
   .adapt-bar-label{display:flex; justify-content:space-between; font-family:var(--mono); font-size:0.7rem; color:var(--muted); margin-bottom:4px;}
   .adapt-bar-track{height:8px; border-radius:6px; background:var(--bg-deep); overflow:hidden;}
   .adapt-bar-fill{height:100%; border-radius:6px; transition:width .4s ease;}
+
+  /* sequence engine */
+  .seq-slots{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;}
+  .seq-slot{flex:1 1 calc(50% - 8px); min-width:120px; background:var(--bg-panel-2); border:2px dashed var(--line); border-radius:12px; padding:10px 8px; text-align:center; cursor:pointer; transition:border-color .2s, background .2s; position:relative; min-height:70px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .seq-slot.filled{border-style:solid; border-color:var(--teal); background:rgba(100,220,200,0.08);}
+  .seq-slot.seq-wrong{border-color:var(--coral)!important; background:rgba(255,111,97,0.12)!important; animation:seqShake .35s ease;}
+  .seq-slot-num{position:absolute; top:5px; left:8px; font-family:var(--mono); font-size:0.65rem; color:var(--muted); font-weight:700;}
+  .seq-slot-empty{font-size:1.4rem; color:var(--line);}
+  .seq-slot-content{font-size:1.3rem; line-height:1.2;}
+  .seq-slot-content span{display:block; font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); margin-top:2px; word-break:break-word; max-width:100px;}
+  .seq-pool{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
+  .seq-chip{background:var(--bg-panel-2); border:2px solid var(--line); border-radius:22px; padding:6px 14px; font-family:var(--mono); font-size:0.78rem; cursor:pointer; transition:border-color .15s, background .15s; user-select:none;}
+  .seq-chip.selected{border-color:var(--amber); background:rgba(255,193,7,0.12); color:var(--amber);}
+  @keyframes seqShake{0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)}}
+
+  /* probe engine */
+  .probe-clues{display:flex; flex-direction:column; gap:8px; margin-bottom:14px;}
+  .probe-clue{background:var(--bg-panel-2); border-left:3px solid var(--teal); border-radius:0 10px 10px 0; padding:8px 12px; animation:probeIn .25s ease;}
+  .probe-clue-num{display:block; font-family:var(--mono); font-size:0.65rem; font-weight:700; color:var(--teal); margin-bottom:2px; text-transform:uppercase; letter-spacing:.05em;}
+  .probe-clue-text{font-family:var(--mono); font-size:0.82rem; color:var(--text-dim);}
+  .probe-actions{display:flex; flex-direction:column; gap:8px;}
+  .probe-cost{font-family:var(--mono); font-size:0.72rem; color:var(--coral); margin-top:6px; padding:5px 10px; background:rgba(255,111,97,0.08); border-radius:8px;}
+  @keyframes probeIn{from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)}}
 </style>
 </head>
 <body>
@@ -774,11 +797,11 @@ function pickTemplates(levelIdx, catKey){
 /* Кожна категорія може мати кілька типів місій — обирається випадково щоразу,
    щоб чергувати "діагностику" з "побудовою/ремонтом" (drag-and-drop-стиль). */
 const ENGINE_POOLS = {
-  molecular:['slider','toggle','classify'],
-  cellular:['diagnosis','match','slider','network'],
-  organism:['toggle','diagnosis','classify'],
-  ecosystem:['population','match','toggle','network'],
-  biosphere:['toggle','population','classify']
+  molecular:['slider','toggle','classify','sequence'],
+  cellular:['diagnosis','match','slider','network','sequence','probe'],
+  organism:['toggle','diagnosis','classify','sequence','probe'],
+  ecosystem:['population','match','toggle','network','probe'],
+  biosphere:['toggle','population','classify','sequence']
 };
 // Резервний банк написаний вручну лише для одного "первинного" рушія на
 // категорію (+ окремий match-варіант) — якщо ШІ обрав інший рушій з пулу,
@@ -1371,7 +1394,9 @@ const ENGINE_SCHEMAS = {
   population: `{"scenario":"опис ситуації 1-2 речення","visualTheme":"одне з: dish, habitat — обери за суттю сценарію (див. окрему інструкцію нижче)","label":"назва часового параметра (напр. Років після події)","min":0,"max":number,"step":1,"formula":"decay або growth","start":number,"rate":number(0.05-0.35),"targetMin":number,"targetMax":number,"barLabel":"назва вимірюваного показника (%)","evidence":"речення про знахідку","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
   match: `{"scenario":"опис ситуації 1-2 речення (побудова/ремонт клітини, системи органів АБО харчової мережі — залежно від масштабу)","pairs":[{"itemLabel":"назва об'єкта (органела/орган/організм)","itemIcon":"один емодзі","slotLabel":"назва функції/ролі, куди його треба розмістити"},{"...ще 3-5 пар..."}],"evidence":"речення про завершену побудову","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
   classify: `{"scenario":"опис ситуації 1-2 речення","bins":[{"key":"bin1","label":"назва категорії 1","emoji":"один емодзі"},{"key":"bin2","label":"назва категорії 2","emoji":"один емодзі"}],"items":[{"label":"назва об'єкта","icon":"один емодзі","bin":"bin1"},{"label":"...","icon":"емодзі","bin":"bin2"},{"...ще 4-6 об'єктів сумарно..."}],"evidence":"речення про правильний розподіл","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
-  network: `{"scenario":"опис ситуації 1-2 речення","nodes":[{"id":"a","label":"подія/процес 1","icon":"один емодзі"},{"id":"b","label":"подія/процес 2","icon":"один емодзі"},{"id":"c","label":"подія/процес 3","icon":"один емодзі"},{"id":"d","label":"подія/процес 4","icon":"один емодзі"}],"correctChain":["a","b","c","d"],"evidence":"речення про виявлений причинно-наслідковий ланцюжок","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`
+  network: `{"scenario":"опис ситуації 1-2 речення","nodes":[{"id":"a","label":"подія/процес 1","icon":"один емодзі"},{"id":"b","label":"подія/процес 2","icon":"один емодзі"},{"id":"c","label":"подія/процес 3","icon":"один емодзі"},{"id":"d","label":"подія/процес 4","icon":"один емодзі"}],"correctChain":["a","b","c","d"],"evidence":"речення про виявлений причинно-наслідковий ланцюжок","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
+  sequence: `{"scenario":"опис ситуації 1-2 речення","steps":[{"id":"s1","label":"крок/фаза 1 (найперший)","icon":"один емодзі"},{"id":"s2","label":"крок 2","icon":"один емодзі"},{"id":"s3","label":"крок 3","icon":"один емодзі"},{"id":"s4","label":"крок 4","icon":"один емодзі"},{"id":"s5","label":"крок 5 (останній)","icon":"один емодзі"}],"evidence":"речення про відновлену послідовність","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
+  probe: `{"scenario":"опис ситуації 1-2 речення (лаборант не знає, що спричинило явище)","clues":["підказка 1 — найзагальніша, не розкриває відповідь","підказка 2 — трохи конкретніша","підказка 3 — вказує на ключову характеристику","підказка 4 — майже однозначна, але ще потребує роздумів","підказка 5 — найбільш конкретна, відповідь очевидна після неї"],"evidence":"речення про те, яке явище/організм/процес було визначено","question":"питання що це означає для досліджуваної системи","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`
 };
 
 let lastSetting = null, lastRole = null, lastOpening = null, lastEnding = null;
@@ -1623,6 +1648,19 @@ function validateTask(engine, p){
     const nodeIds = p.nodes.map(n=>n.id);
     const badId = p.correctChain.find(id=>!nodeIds.includes(id));
     if(badId) return 'network: correctChain references unknown node id: '+badId;
+    return null;
+  }
+  if(engine==='sequence'){
+    if(!Array.isArray(p.steps) || p.steps.length<3) return 'sequence: need at least 3 steps';
+    const badStep = p.steps.find(s=>!s.id || !s.label || !s.icon);
+    if(badStep) return 'sequence: a step is missing id/label/icon';
+    const ids = p.steps.map(s=>s.id);
+    if(new Set(ids).size!==ids.length) return 'sequence: duplicate step ids';
+    return null;
+  }
+  if(engine==='probe'){
+    if(!Array.isArray(p.clues) || p.clues.length<3) return 'probe: need at least 3 clues';
+    if(p.clues.some(c=>typeof c!=='string'||!c.trim())) return 'probe: all clues must be non-empty strings';
     return null;
   }
   return 'unknown engine: '+engine;
@@ -2883,6 +2921,8 @@ $('btn-test-ai').onclick = async ()=>{
 function renderSim(engine, d, onFound, reportTriedCount){
   if(engine==='classify'){ renderClassifySim(d,onFound,reportTriedCount); return; }
   if(engine==='network'){ renderNetworkSim(d,onFound,reportTriedCount); return; }
+  if(engine==='sequence'){ renderSequenceSim(d,onFound,reportTriedCount); return; }
+  if(engine==='probe'){ renderProbeSim(d,onFound,reportTriedCount); return; }
   if(engine==='slider') renderSliderSim(d,onFound,reportTriedCount);
   else if(engine==='diagnosis') renderDiagnosisSim(d,onFound,reportTriedCount);
   else if(engine==='toggle') renderToggleSim(d,onFound,reportTriedCount);
@@ -3445,6 +3485,117 @@ function renderNetworkSim(d, onFound, reportTriedCount){
         }
       };
     });
+  }
+  render();
+}
+
+function renderSequenceSim(d, onFound, reportTriedCount){
+  const area = $('sim-area');
+  const steps = d.steps; // correct order
+  let mistakes = 0;
+  let selected = null; // id of chip selected from pool
+  let placed = {}; // slot index -> step id | null
+  let wrongSlots = new Set();
+  steps.forEach((_,i)=>{ placed[i]=null; });
+
+  function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
+  const shuffled = shuffle([...steps]);
+
+  function poolItems(){ return shuffled.filter(s=>!Object.values(placed).includes(s.id)); }
+  function allFilled(){ return Object.values(placed).every(v=>v!==null); }
+
+  function check(){
+    wrongSlots = new Set();
+    let allOk = true;
+    steps.forEach((step,i)=>{ if(placed[i]!==step.id){ allOk=false; wrongSlots.add(i); } });
+    if(allOk){
+      const log = `Учень розставив ${steps.length} кроків у правильному порядку: ${steps.map(s=>s.label).join(' → ')}. Помилкових перевірок: ${mistakes}.`;
+      render();
+      setTimeout(()=>onFound(log), 400);
+    } else {
+      mistakes++;
+      reportTriedCount(mistakes);
+      render();
+      setTimeout(()=>{ wrongSlots=new Set(); render(); }, 750);
+    }
+  }
+
+  function render(){
+    const pool = poolItems();
+    area.innerHTML = `<div class="sim-box" style="padding:14px;">
+      <div class="sim-row" style="margin-bottom:10px;">
+        <span class="sim-label">Розстав кроки у правильному порядку</span>
+        ${mistakes>0?`<span class="sim-value" style="color:var(--coral)">Спроб: ${mistakes}</span>`:''}
+      </div>
+      <div class="seq-slots">
+        ${steps.map((_,i)=>{
+          const sid=placed[i]; const s=sid?steps.find(x=>x.id===sid):null;
+          const wrong=wrongSlots.has(i);
+          return `<div class="seq-slot ${s?'filled':''} ${wrong?'seq-wrong':''}" data-slot="${i}">
+            <div class="seq-slot-num">${i+1}</div>
+            ${s?`<div class="seq-slot-content">${s.icon}<br><span>${s.label}</span></div>`:'<div class="seq-slot-empty">?</div>'}
+          </div>`;
+        }).join('')}
+      </div>
+      ${pool.length>0?`<div class="seq-pool">
+        ${pool.map(s=>`<div class="seq-chip${selected===s.id?' selected':''}" data-chip="${s.id}">${s.icon} ${s.label}</div>`).join('')}
+      </div>`:''}
+      ${allFilled()?`<button class="btn primary" id="seq-check" style="margin-top:14px;width:100%;">Перевірити порядок →</button>`:''}
+      <div style="font-family:var(--mono);font-size:0.68rem;color:var(--muted);margin-top:8px;">Тисни на чіп → потім на клітинку-слот. Тисни на слот ще раз — повернеш елемент до пулу.</div>
+    </div>`;
+
+    area.querySelectorAll('.seq-chip').forEach(el=>{
+      el.onclick=()=>{ selected=selected===el.dataset.chip?null:el.dataset.chip; render(); };
+    });
+    area.querySelectorAll('.seq-slot').forEach(el=>{
+      el.onclick=()=>{
+        const idx=parseInt(el.dataset.slot);
+        if(selected){
+          // If slot is occupied, free the old chip first
+          placed[idx]=selected; selected=null; render();
+        } else if(placed[idx]){
+          placed[idx]=null; render();
+        }
+      };
+    });
+    const cb=document.getElementById('seq-check');
+    if(cb) cb.onclick=check;
+  }
+  render();
+}
+
+function renderProbeSim(d, onFound, reportTriedCount){
+  const area = $('sim-area');
+  const clues = d.clues;
+  let revealed = 1;
+  let mistakes = 0;
+
+  function render(){
+    area.innerHTML = `<div class="sim-box" style="padding:14px;">
+      <div class="sim-row" style="margin-bottom:10px;">
+        <span class="sim-label">🔍 Детективне розслідування</span>
+        <span class="sim-value">${revealed}/${clues.length} підказок</span>
+      </div>
+      <div class="probe-clues">
+        ${clues.slice(0,revealed).map((c,i)=>`<div class="probe-clue">
+          <span class="probe-clue-num">Підказка ${i+1}</span>
+          <span class="probe-clue-text">${c}</span>
+        </div>`).join('')}
+      </div>
+      <div class="probe-actions">
+        ${revealed<clues.length?`<button class="btn secondary" id="probe-next">Розкрити наступну підказку ↓</button>`:''}
+        <button class="btn primary" id="probe-ans">Я знаю відповідь! →</button>
+      </div>
+      ${mistakes>0?`<div class="probe-cost">Додаткових підказок відкрито: ${mistakes} (кожна знижує бал)</div>`:''}
+    </div>`;
+
+    const nb=document.getElementById('probe-next');
+    if(nb) nb.onclick=()=>{ revealed++; mistakes++; reportTriedCount(mistakes); render(); };
+    const ab=document.getElementById('probe-ans');
+    if(ab) ab.onclick=()=>{
+      const log=`Детективна місія: учень відкрив ${revealed} з ${clues.length} підказок. Відкриті: ${clues.slice(0,revealed).map((c,i)=>`[${i+1}] ${c}`).join(' | ')}. Додаткових підказок використано (−від балу): ${mistakes}.`;
+      onFound(log);
+    };
   }
   render();
 }
