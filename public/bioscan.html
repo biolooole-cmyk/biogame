@@ -2428,7 +2428,7 @@ function renderProfile(){
       if(pc.attempts===0) return;
       const avg = Math.round(pc.totalScore/pc.attempts);
       const color = avg>=80?'var(--mint)': avg>=60?'var(--amber)':'var(--coral)';
-      const label = avg>=80?'✓ Сильна зона':'': avg>=60?'':'⚠ Потребує уваги';
+      const label = avg>=80?'✓ Сильна зона': avg>=60?'':'⚠ Потребує уваги';
       adaptDiv.innerHTML += `<div class="adapt-bar-wrap">
         <div class="adapt-bar-label"><span>${cat.icon} ${cat.label.split(' ')[0]}</span><span style="color:${color}">${avg}% ${avg<60?'⚠':avg>=80?'✓':''}</span></div>
         <div class="adapt-bar-track"><div class="adapt-bar-fill" style="width:${avg}%;background:${color};"></div></div>
