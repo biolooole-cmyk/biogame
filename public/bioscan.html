@@ -569,6 +569,68 @@
   .probe-actions{display:flex; flex-direction:column; gap:8px;}
   .probe-cost{font-family:var(--mono); font-size:0.72rem; color:var(--coral); margin-top:6px; padding:5px 11px; background:rgba(255,87,87,0.07); border-radius:9px; border:1px solid rgba(255,87,87,0.2);}
   @keyframes probeIn{from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)}}
+
+  /* ── COMPARE ENGINE ── */
+  .compare-header{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;}
+  .compare-col-head{text-align:center; padding:10px 8px; border-radius:14px; font-family:var(--display); font-size:0.88rem; font-weight:700;}
+  .compare-col-head.col-a{background:rgba(192,132,252,0.12); border:1.5px solid rgba(192,132,252,0.4); color:var(--violet);}
+  .compare-col-head.col-b{background:rgba(34,211,238,0.1); border:1.5px solid rgba(34,211,238,0.35); color:var(--teal);}
+  .compare-traits{display:flex; flex-direction:column; gap:7px;}
+  .compare-trait{display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.04); border:1.5px solid var(--line-hi); border-radius:13px; padding:10px 12px; transition:border-color .2s;}
+  .compare-trait.correct-a{border-color:rgba(192,132,252,0.5); background:rgba(192,132,252,0.08); animation:compareSnap .3s ease;}
+  .compare-trait.correct-b{border-color:rgba(34,211,238,0.5); background:rgba(34,211,238,0.07); animation:compareSnap .3s ease;}
+  .compare-trait.wrong{border-color:var(--coral)!important; background:rgba(255,87,87,0.09)!important; animation:matchShake .4s ease;}
+  .compare-trait-label{flex:1; font-size:0.84rem;}
+  .compare-btns{display:flex; gap:6px;}
+  .compare-btn{font-family:var(--mono); font-size:0.72rem; font-weight:700; border:none; border-radius:8px; padding:6px 12px; cursor:pointer; transition:transform .1s, box-shadow .1s;}
+  .compare-btn.a{background:rgba(192,132,252,0.18); color:var(--violet); border:1px solid rgba(192,132,252,0.4);}
+  .compare-btn.b{background:rgba(34,211,238,0.12); color:var(--teal); border:1px solid rgba(34,211,238,0.35);}
+  .compare-btn:hover{transform:scale(1.06);}
+  .compare-btn:disabled{opacity:0.3; cursor:default; transform:none;}
+  .compare-progress{font-family:var(--mono); font-size:0.74rem; color:var(--muted); text-align:center; margin-top:8px;}
+  @keyframes compareSnap{0%{transform:scale(0.97)} 60%{transform:scale(1.02)} 100%{transform:scale(1)}}
+
+  /* ── MEMORY ENGINE ── */
+  .memory-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:8px;}
+  .mem-card{
+    aspect-ratio:1; border-radius:14px; cursor:pointer; position:relative;
+    transform-style:preserve-3d; transition:transform .35s ease;
+    min-height:68px;
+  }
+  .mem-card.flipped{transform:rotateY(180deg);}
+  .mem-card.matched{transform:rotateY(180deg);}
+  .mem-card-face{
+    position:absolute; inset:0; border-radius:14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    padding:6px 4px; text-align:center;
+  }
+  .mem-card-back{background:linear-gradient(135deg,rgba(192,132,252,0.18),rgba(0,255,186,0.1)); border:1.5px solid rgba(255,255,255,0.12); font-size:1.5rem;}
+  .mem-card-front{background:rgba(255,255,255,0.07); border:1.5px solid var(--line-hi); transform:rotateY(180deg);}
+  .mem-card.matched .mem-card-front{background:rgba(0,255,186,0.1); border-color:rgba(0,255,186,0.45); box-shadow:0 0 14px rgba(0,255,186,0.15);}
+  .mem-card.mismatch .mem-card-front{border-color:var(--coral); background:rgba(255,87,87,0.1);}
+  .mem-card-icon{font-size:1.4rem; line-height:1;}
+  .mem-card-label{font-family:var(--mono); font-size:0.58rem; color:var(--text-dim); margin-top:3px; word-break:break-word; line-height:1.3;}
+  .mem-status{font-family:var(--mono); font-size:0.74rem; color:var(--muted); text-align:center;}
+  .mem-mistakes{color:var(--coral);}
+
+  /* ── FILL ENGINE ── */
+  .fill-text{font-size:0.97rem; line-height:2; margin-bottom:12px;}
+  .fill-blank{
+    display:inline-block; min-width:80px; padding:2px 12px; border-radius:8px; cursor:pointer;
+    background:rgba(255,255,255,0.07); border:1.5px dashed rgba(255,255,255,0.2);
+    font-family:var(--mono); font-size:0.82rem; color:var(--text-dim);
+    transition:border-color .15s, background .15s;
+    vertical-align:middle; text-align:center; margin:0 2px;
+  }
+  .fill-blank:hover{border-color:rgba(255,255,255,0.35); background:rgba(255,255,255,0.1);}
+  .fill-blank.active{border-color:var(--amber); background:rgba(255,208,37,0.1); color:var(--amber); border-style:solid;}
+  .fill-blank.correct{border-color:rgba(0,255,186,0.5); background:rgba(0,255,186,0.08); color:var(--mint); border-style:solid; cursor:default; pointer-events:none;}
+  .fill-blank.wrong{border-color:var(--coral)!important; background:rgba(255,87,87,0.1)!important; animation:matchShake .4s ease;}
+  .fill-picker{display:flex; flex-wrap:wrap; gap:7px; padding:10px; background:rgba(0,0,0,0.2); border:1px solid var(--line-hi); border-radius:12px; margin-bottom:8px;}
+  .fill-option{font-family:var(--mono); font-size:0.82rem; padding:7px 14px; border-radius:10px; cursor:pointer; background:rgba(255,255,255,0.06); border:1.5px solid var(--line-hi); transition:border-color .15s, background .15s, transform .1s;}
+  .fill-option:hover{border-color:rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); transform:translateY(-1px);}
+  .fill-progress{font-family:var(--mono); font-size:0.72rem; color:var(--muted); text-align:center; margin-top:6px;}
 </style>
 </head>
 <body>
@@ -1025,11 +1087,11 @@ function pickTemplates(levelIdx, catKey){
 /* Кожна категорія може мати кілька типів місій — обирається випадково щоразу,
    щоб чергувати "діагностику" з "побудовою/ремонтом" (drag-and-drop-стиль). */
 const ENGINE_POOLS = {
-  molecular:['slider','toggle','classify','sequence'],
-  cellular:['diagnosis','match','slider','network','sequence','probe'],
-  organism:['toggle','diagnosis','classify','sequence','probe'],
-  ecosystem:['population','match','toggle','network','probe'],
-  biosphere:['toggle','population','classify','sequence']
+  molecular:['slider','toggle','classify','sequence','memory','fill'],
+  cellular:['diagnosis','match','slider','network','sequence','probe','compare','memory'],
+  organism:['toggle','diagnosis','classify','sequence','probe','compare','fill'],
+  ecosystem:['population','match','toggle','network','probe','fill'],
+  biosphere:['toggle','population','classify','sequence','compare','fill']
 };
 // Резервний банк написаний вручну лише для одного "первинного" рушія на
 // категорію (+ окремий match-варіант) — якщо ШІ обрав інший рушій з пулу,
@@ -1624,7 +1686,10 @@ const ENGINE_SCHEMAS = {
   classify: `{"scenario":"опис ситуації 1-2 речення","bins":[{"key":"bin1","label":"назва категорії 1","emoji":"один емодзі"},{"key":"bin2","label":"назва категорії 2","emoji":"один емодзі"}],"items":[{"label":"назва об'єкта","icon":"один емодзі","bin":"bin1"},{"label":"...","icon":"емодзі","bin":"bin2"},{"...ще 4-6 об'єктів сумарно..."}],"evidence":"речення про правильний розподіл","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
   network: `{"scenario":"опис ситуації 1-2 речення","nodes":[{"id":"a","label":"подія/процес 1","icon":"один емодзі"},{"id":"b","label":"подія/процес 2","icon":"один емодзі"},{"id":"c","label":"подія/процес 3","icon":"один емодзі"},{"id":"d","label":"подія/процес 4","icon":"один емодзі"}],"correctChain":["a","b","c","d"],"evidence":"речення про виявлений причинно-наслідковий ланцюжок","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
   sequence: `{"scenario":"опис ситуації 1-2 речення","steps":[{"id":"s1","label":"крок/фаза 1 (найперший)","icon":"один емодзі"},{"id":"s2","label":"крок 2","icon":"один емодзі"},{"id":"s3","label":"крок 3","icon":"один емодзі"},{"id":"s4","label":"крок 4","icon":"один емодзі"},{"id":"s5","label":"крок 5 (останній)","icon":"один емодзі"}],"evidence":"речення про відновлену послідовність","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
-  probe: `{"scenario":"опис ситуації 1-2 речення (лаборант не знає, що спричинило явище)","clues":["підказка 1 — найзагальніша, не розкриває відповідь","підказка 2 — трохи конкретніша","підказка 3 — вказує на ключову характеристику","підказка 4 — майже однозначна, але ще потребує роздумів","підказка 5 — найбільш конкретна, відповідь очевидна після неї"],"evidence":"речення про те, яке явище/організм/процес було визначено","question":"питання що це означає для досліджуваної системи","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`
+  probe: `{"scenario":"опис ситуації 1-2 речення (лаборант не знає, що спричинило явище)","clues":["підказка 1 — найзагальніша, не розкриває відповідь","підказка 2 — трохи конкретніша","підказка 3 — вказує на ключову характеристику","підказка 4 — майже однозначна, але ще потребує роздумів","підказка 5 — найбільш конкретна, відповідь очевидна після неї"],"evidence":"речення про те, яке явище/організм/процес було визначено","question":"питання що це означає для досліджуваної системи","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
+  compare: `{"scenario":"опис ситуації 1-2 речення","colA":{"label":"назва групи A (напр. Прокаріоти)","emoji":"один емодзі"},"colB":{"label":"назва групи B (напр. Еукаріоти)","emoji":"один емодзі"},"traits":[{"id":"t1","label":"коротка ознака/характеристика","col":"A"},{"id":"t2","label":"ознака 2","col":"B"},{"id":"t3","label":"ознака 3","col":"A"},{"id":"t4","label":"ознака 4","col":"B"},{"id":"t5","label":"ознака 5","col":"A"},{"id":"t6","label":"ознака 6","col":"B"}],"evidence":"речення про висновок порівняння","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
+  memory: `{"scenario":"опис ситуації 1-2 речення","pairs":[{"a":{"label":"термін/об'єкт 1","icon":"один емодзі"},"b":{"label":"функція/визначення 1","icon":"один емодзі"}},{"a":{"label":"термін 2","icon":"емодзі"},"b":{"label":"функція 2","icon":"емодзі"}},{"a":{"label":"термін 3","icon":"емодзі"},"b":{"label":"функція 3","icon":"емодзі"}},{"a":{"label":"термін 4","icon":"емодзі"},"b":{"label":"функція 4","icon":"емодзі"}}],"evidence":"речення про встановлені зв'язки","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`,
+  fill: `{"scenario":"опис ситуації 1-2 речення","text":"Повний біологічний текст із [b1] пропущеними [b2] словами — рівно стільки, скільки бланків у blanks нижче. Кожен пропуск позначений як [b1], [b2] тощо у цьому ж рядку тексту.","blanks":[{"id":"b1","answer":"правильне слово 1","distractors":["помилкове слово A","помилкове слово B"]},{"id":"b2","answer":"правильне слово 2","distractors":["помилкове слово C","помилкове слово D"]},{"id":"b3","answer":"правильне слово 3","distractors":["помилкове слово E","помилкове слово F"]}],"evidence":"речення про знайдені зв'язки","question":"питання що це означає","modelAnswer":"еталонна відповідь","keyPoints":["ідея1","ідея2","ідея3"],"hints":["підказка1","підказка2","підказка3"]}`
 };
 
 let lastSetting = null, lastRole = null, lastOpening = null, lastEnding = null;
@@ -1889,6 +1954,28 @@ function validateTask(engine, p){
   if(engine==='probe'){
     if(!Array.isArray(p.clues) || p.clues.length<3) return 'probe: need at least 3 clues';
     if(p.clues.some(c=>typeof c!=='string'||!c.trim())) return 'probe: all clues must be non-empty strings';
+    return null;
+  }
+  if(engine==='compare'){
+    if(!p.colA || !p.colA.label) return 'compare: missing colA';
+    if(!p.colB || !p.colB.label) return 'compare: missing colB';
+    if(!Array.isArray(p.traits) || p.traits.length<4) return 'compare: need at least 4 traits';
+    const bad = p.traits.find(t=>!t.id||!t.label||(t.col!=='A'&&t.col!=='B'));
+    if(bad) return 'compare: trait missing id/label or invalid col (must be A or B)';
+    return null;
+  }
+  if(engine==='memory'){
+    if(!Array.isArray(p.pairs) || p.pairs.length<3) return 'memory: need at least 3 pairs';
+    const bad = p.pairs.find(pr=>!pr.a||!pr.a.label||!pr.a.icon||!pr.b||!pr.b.label||!pr.b.icon);
+    if(bad) return 'memory: a pair is missing a/b label or icon';
+    return null;
+  }
+  if(engine==='fill'){
+    if(typeof p.text!=='string'||!p.text.trim()) return 'fill: missing text';
+    if(!Array.isArray(p.blanks)||p.blanks.length<2) return 'fill: need at least 2 blanks';
+    const bad = p.blanks.find(b=>!b.id||!b.answer||!Array.isArray(b.distractors)||b.distractors.length<2);
+    if(bad) return 'fill: blank missing id/answer or needs at least 2 distractors';
+    for(const b of p.blanks){ if(!p.text.includes('['+b.id+']')) return 'fill: text does not contain ['+b.id+']'; }
     return null;
   }
   return 'unknown engine: '+engine;
@@ -3151,6 +3238,9 @@ function renderSim(engine, d, onFound, reportTriedCount){
   if(engine==='network'){ renderNetworkSim(d,onFound,reportTriedCount); return; }
   if(engine==='sequence'){ renderSequenceSim(d,onFound,reportTriedCount); return; }
   if(engine==='probe'){ renderProbeSim(d,onFound,reportTriedCount); return; }
+  if(engine==='compare'){ renderCompareSim(d,onFound,reportTriedCount); return; }
+  if(engine==='memory'){ renderMemorySim(d,onFound,reportTriedCount); return; }
+  if(engine==='fill'){ renderFillSim(d,onFound,reportTriedCount); return; }
   if(engine==='slider') renderSliderSim(d,onFound,reportTriedCount);
   else if(engine==='diagnosis') renderDiagnosisSim(d,onFound,reportTriedCount);
   else if(engine==='toggle') renderToggleSim(d,onFound,reportTriedCount);
@@ -3824,6 +3914,205 @@ function renderProbeSim(d, onFound, reportTriedCount){
       const log=`Детективна місія: учень відкрив ${revealed} з ${clues.length} підказок. Відкриті: ${clues.slice(0,revealed).map((c,i)=>`[${i+1}] ${c}`).join(' | ')}. Додаткових підказок використано (−від балу): ${mistakes}.`;
       onFound(log);
     };
+  }
+  render();
+}
+
+function renderCompareSim(d, onFound, reportTriedCount){
+  const area = $('sim-area');
+  let decisions = {}; // traitId -> 'A'|'B'|null
+  let mistakes = 0;
+  d.traits.forEach(t=>{ decisions[t.id]=null; });
+
+  function done(){ return d.traits.every(t=>decisions[t.id]!==null); }
+
+  function pick(traitId, col){
+    const trait = d.traits.find(t=>t.id===traitId);
+    if(col===trait.col){
+      decisions[traitId]=col;
+      reportTriedCount(Object.values(decisions).filter(v=>v).length);
+      render();
+      if(done()){
+        const log = `Учень розподілив ${d.traits.length} ознак між "${d.colA.label}" та "${d.colB.label}". Помилок: ${mistakes}.`;
+        setTimeout(()=>onFound(log), 350);
+      }
+    } else {
+      mistakes++;
+      reportTriedCount(mistakes);
+      const el = document.querySelector(`[data-trait="${traitId}"]`);
+      if(el){ el.classList.add('wrong'); setTimeout(()=>el.classList.remove('wrong'),500); }
+    }
+  }
+
+  function render(){
+    const placed = Object.values(decisions).filter(v=>v).length;
+    area.innerHTML = `<div class="sim-box" style="padding:14px;">
+      <div class="compare-header">
+        <div class="compare-col-head col-a">${d.colA.emoji} ${d.colA.label}</div>
+        <div class="compare-col-head col-b">${d.colB.emoji} ${d.colB.label}</div>
+      </div>
+      <div class="compare-traits">
+        ${d.traits.map(t=>{
+          const dec=decisions[t.id];
+          return `<div class="compare-trait ${dec?('correct-'+dec.toLowerCase()):''}" data-trait="${t.id}">
+            <span class="compare-trait-label">${t.label}</span>
+            <div class="compare-btns">
+              <button class="compare-btn a" data-tid="${t.id}" data-col="A" ${dec?'disabled':''}>A</button>
+              <button class="compare-btn b" data-tid="${t.id}" data-col="B" ${dec?'disabled':''}>B</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="compare-progress">${placed}/${d.traits.length} розподілено${mistakes>0?' · Помилок: '+mistakes:''}</div>
+    </div>`;
+    area.querySelectorAll('.compare-btn').forEach(btn=>{
+      btn.onclick=()=>pick(btn.dataset.tid, btn.dataset.col);
+    });
+  }
+  render();
+}
+
+function renderMemorySim(d, onFound, reportTriedCount){
+  const area = $('sim-area');
+  // Build card list: each pair gives card A and card B
+  const cards = [];
+  d.pairs.forEach((pr,i)=>{
+    cards.push({id:'a'+i, pairId:i, side:'a', label:pr.a.label, icon:pr.a.icon});
+    cards.push({id:'b'+i, pairId:i, side:'b', label:pr.b.label, icon:pr.b.icon});
+  });
+  function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
+  const shuffled = shuffle(cards);
+
+  let flipped = []; // currently revealed (not yet matched) card ids
+  let matched = new Set(); // matched card ids
+  let mistakes = 0;
+  let locked = false;
+
+  function render(){
+    const matchedPairs = matched.size / 2;
+    area.innerHTML = `<div class="sim-box" style="padding:14px;">
+      <div class="sim-row" style="margin-bottom:10px;">
+        <span class="sim-label">Знайди пари — термін і його функцію</span>
+        <span class="sim-value">${matchedPairs}/${d.pairs.length}</span>
+      </div>
+      <div class="memory-grid">
+        ${shuffled.map(c=>{
+          const isFlipped = flipped.includes(c.id)||matched.has(c.id);
+          const isMatched = matched.has(c.id);
+          const isMismatch = flipped.length===2&&flipped.includes(c.id)&&!isMatched;
+          return `<div class="mem-card ${isFlipped?'flipped':''} ${isMatched?'matched':''} ${isMismatch?'mismatch':''}" data-cid="${c.id}">
+            <div class="mem-card-face mem-card-back">🧬</div>
+            <div class="mem-card-face mem-card-front">
+              <div class="mem-card-icon">${c.icon}</div>
+              <div class="mem-card-label">${c.label}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="mem-status">Натискай картки, щоб відкрити пару${mistakes>0?` · <span class="mem-mistakes">Помилок: ${mistakes}</span>`:''}</div>
+    </div>`;
+
+    if(!locked){
+      area.querySelectorAll('.mem-card').forEach(el=>{
+        if(matched.has(el.dataset.cid)||flipped.includes(el.dataset.cid)) return;
+        el.onclick=()=>flip(el.dataset.cid);
+      });
+    }
+  }
+
+  function flip(cid){
+    if(locked||matched.has(cid)||flipped.includes(cid)) return;
+    flipped.push(cid);
+    render();
+    if(flipped.length===2){
+      locked=true;
+      const [idA,idB]=flipped;
+      const cA=shuffled.find(c=>c.id===idA), cB=shuffled.find(c=>c.id===idB);
+      if(cA.pairId===cB.pairId){
+        matched.add(idA); matched.add(idB);
+        flipped=[]; locked=false;
+        reportTriedCount(matched.size/2);
+        render();
+        if(matched.size===shuffled.length){
+          const log=`Учень знайшов усі ${d.pairs.length} пари у грі пам'яті. Помилкових спроб: ${mistakes}.`;
+          setTimeout(()=>onFound(log),400);
+        }
+      } else {
+        mistakes++;
+        reportTriedCount(mistakes);
+        render();
+        setTimeout(()=>{ flipped=[]; locked=false; render(); },900);
+      }
+    }
+  }
+  render();
+}
+
+function renderFillSim(d, onFound, reportTriedCount){
+  const area = $('sim-area');
+  let answers = {}; // blankId -> filled answer | null
+  let activeBlank = null; // blankId currently selected
+  let mistakes = 0;
+  d.blanks.forEach(b=>{ answers[b.id]=null; });
+
+  function allFilled(){ return d.blanks.every(b=>answers[b.id]!==null); }
+
+  function buildTextHTML(){
+    let html = d.text;
+    d.blanks.forEach(b=>{
+      const filled = answers[b.id];
+      const cls = filled ? 'correct' : (activeBlank===b.id ? 'active' : '');
+      const display = filled || (activeBlank===b.id ? '▸ обери' : '___');
+      html = html.replace('['+b.id+']',
+        `<span class="fill-blank ${cls}" data-bid="${b.id}">${display}</span>`);
+    });
+    return html;
+  }
+
+  function pickOption(blankId, option){
+    const blank = d.blanks.find(b=>b.id===blankId);
+    if(option===blank.answer){
+      answers[blankId]=option;
+      activeBlank=null;
+      reportTriedCount(Object.values(answers).filter(v=>v).length);
+      render();
+      if(allFilled()){
+        const log=`Учень правильно заповнив всі ${d.blanks.length} пропуски тексту. Помилок: ${mistakes}.`;
+        setTimeout(()=>onFound(log),350);
+      }
+    } else {
+      mistakes++;
+      reportTriedCount(mistakes);
+      render();
+      // Flash wrong on the blank
+      const blankEl = area.querySelector(`[data-bid="${blankId}"]`);
+      if(blankEl){ blankEl.classList.add('wrong'); setTimeout(()=>blankEl.classList.remove('wrong'),500); }
+    }
+  }
+
+  function render(){
+    const filled = Object.values(answers).filter(v=>v).length;
+    const activeB = activeBlank ? d.blanks.find(b=>b.id===activeBlank) : null;
+    const options = activeB ? [activeB.answer, ...activeB.distractors].sort(()=>Math.random()-.5) : [];
+
+    area.innerHTML = `<div class="sim-box" style="padding:14px;">
+      <div class="sim-row" style="margin-bottom:10px;">
+        <span class="sim-label">Заповни пропуски в тексті</span>
+        <span class="sim-value">${filled}/${d.blanks.length}</span>
+      </div>
+      <div class="fill-text">${buildTextHTML()}</div>
+      ${activeB ? `<div class="fill-picker">
+        ${options.map(opt=>`<div class="fill-option" data-opt="${opt}" data-bid="${activeB.id}">${opt}</div>`).join('')}
+      </div>` : `<div style="font-family:var(--mono);font-size:0.7rem;color:var(--muted);">Натисни на пропуск, щоб відкрити варіанти.</div>`}
+      ${mistakes>0?`<div class="fill-progress">Помилок: ${mistakes}</div>`:''}
+    </div>`;
+
+    area.querySelectorAll('.fill-blank:not(.correct)').forEach(el=>{
+      el.onclick=()=>{ activeBlank=el.dataset.bid; render(); };
+    });
+    area.querySelectorAll('.fill-option').forEach(el=>{
+      el.onclick=()=>pickOption(el.dataset.bid, el.dataset.opt);
+    });
   }
   render();
 }
